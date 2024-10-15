@@ -168,9 +168,6 @@ const postSlice = createSlice({
 
     // like Post
     [likePost.fulfilled]: (state, { payload }) => {
-      state.posts = state.posts.map((post) =>
-        post.post_id === payload.post_id ? payload : post
-      );
       toast("Like added", {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 1000,

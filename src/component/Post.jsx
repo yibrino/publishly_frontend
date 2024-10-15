@@ -88,15 +88,20 @@ export const Post = ({ post }) => {
     e.stopPropagation();
     setIsLiked(true);
     setLikeCount((prevCount) => prevCount + 1);
+    console.log("Post Id", post?.post_id);
+    console.log("User Id", userData.id);
 
-    dispatch(
-      likePost({ postId: post?.post_id, user_id: userData.id, token })
-    ).catch((error) => {
-      // Rollback in case of error
-      setIsLiked(false);
-      setLikeCount((prevCount) => prevCount - 1);
-      console.error("Error liking post:", error);
-    });
+    dispatch(likePost({ postId: post?.post_id, user_id: userData.id, token }))
+      .then(() => {
+        // Dispatch to fetch all posts again after liking the post
+        dispatch(getAllPosts());
+      })
+      .catch((error) => {
+        // Rollback in case of error
+        setIsLiked(false);
+        setLikeCount((prevCount) => prevCount - 1);
+        console.error("Error liking post:", error);
+      });
   };
 
   // Dislike Post Handler
@@ -107,12 +112,17 @@ export const Post = ({ post }) => {
 
     dispatch(
       dislikePost({ postId: post?.post_id, user_id: userData.id, token })
-    ).catch((error) => {
-      // Rollback in case of error
-      setIsLiked(true);
-      setLikeCount((prevCount) => prevCount + 1);
-      console.error("Error disliking post:", error);
-    });
+    )
+      .then(() => {
+        // Dispatch to fetch all posts again after disliking the post
+        dispatch(getAllPosts());
+      })
+      .catch((error) => {
+        // Rollback in case of error
+        setIsLiked(true);
+        setLikeCount((prevCount) => prevCount + 1);
+        console.error("Error disliking post:", error);
+      });
   };
 
   return (

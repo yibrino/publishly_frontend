@@ -78,6 +78,10 @@ export const SinglePost = () => {
         }));
         console.log("Current Post", currentPost);
       })
+      .then(() => {
+        // Dispatch to fetch all posts again after disliking the post
+        dispatch(getAllPosts());
+      })
       .catch((err) => {
         console.error("Error disliking post:", err);
       });
@@ -101,6 +105,10 @@ export const SinglePost = () => {
           post_liked_by: [...prevPost.post_liked_by, userData.id],
           post_like_count: prevPost.post_like_count + 1,
         }));
+      })
+      .then(() => {
+        // Dispatch to fetch all posts again after liking the post
+        dispatch(getAllPosts());
       })
       .catch((err) => {
         console.error("Error liking post:", err);

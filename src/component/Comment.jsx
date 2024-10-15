@@ -59,8 +59,14 @@ export const Comment = ({ postId, comment, postOwnerUsername }) => {
         comment_content: editCommentData.comment_content,
         token,
       })
-    );
-    dispatch(getAllPosts());
+    )
+      .then(() => {
+        // Fetch all posts again to see the updated comments
+        dispatch(getAllPosts());
+      })
+      .catch((error) => {
+        console.error("Error updating comment:", error);
+      });
 
     console.log("postId", postId);
     console.log("commentData", editCommentData);
@@ -68,8 +74,14 @@ export const Comment = ({ postId, comment, postOwnerUsername }) => {
   };
 
   const deleteCommentHandler = () => {
-    dispatch(deleteComment({ token, comment_id: editCommentData.comment_id }));
-    dispatch(getAllPosts());
+    dispatch(deleteComment({ token, comment_id: editCommentData.comment_id }))
+      .then(() => {
+        // Fetch all posts again to update UI after deleting the comment
+        dispatch(getAllPosts());
+      })
+      .catch((error) => {
+        console.error("Error deleting comment:", error);
+      });
   };
 
   return (
