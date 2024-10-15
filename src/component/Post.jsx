@@ -13,6 +13,7 @@ import {
   deletePost,
   getAllPosts,
 } from "../features/post/helpers";
+import Swal from "sweetalert2"; // Import SweetAlert
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -59,11 +60,49 @@ export const Post = ({ post }) => {
   };
 
   // Delete Post Handler
+
+  // Delete Post Handler
   const deletePostHandler = (e) => {
     e.stopPropagation();
-    dispatch(deletePost({ postId: post?.post_id, token })).then(() => {
-      dispatch(getAllPosts());
-      setPostOptions(false);
+
+    // Show confirmation dialog before deleting the post
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to undo this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Proceed with deleting the post if confirmed
+        dispatch(deletePost({ postId: post?.post_id, token }))
+          .then(() => {
+            dispatch(getAllPosts());
+            setPostOptions(false);
+
+            // Show success message
+            Swal.fire({
+              title: "Deleted!",
+              text: "The post has been deleted.",
+              icon: "success",
+              confirmButtonColor: "#3085d6",
+            });
+          })
+          .catch((error) => {
+            console.error("Error deleting post:", error);
+
+            // Show error message if deletion fails
+            Swal.fire({
+              title: "Error!",
+              text: "There was an error deleting the post.",
+              icon: "error",
+              confirmButtonColor: "#3085d6",
+            });
+          });
+      }
     });
   };
 

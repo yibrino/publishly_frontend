@@ -6,6 +6,7 @@ import {
   editComment,
   deleteComment,
 } from "../features/post/helpers";
+import Swal from "sweetalert2"; // Import SweetAlert
 
 export const Comment = ({ postId, comment, postOwnerUsername }) => {
   const [openCommentModal, setCommentModal] = useState(false); // for toggling comment modal
@@ -74,14 +75,47 @@ export const Comment = ({ postId, comment, postOwnerUsername }) => {
   };
 
   const deleteCommentHandler = () => {
-    dispatch(deleteComment({ token, comment_id: editCommentData.comment_id }))
-      .then(() => {
-        // Fetch all posts again to update UI after deleting the comment
-        dispatch(getAllPosts());
-      })
-      .catch((error) => {
-        console.error("Error deleting comment:", error);
-      });
+    // Show confirmation dialog before deleting the comment
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to undo this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Proceed with deleting the comment if confirmed
+        dispatch(
+          deleteComment({ token, comment_id: editCommentData.comment_id })
+        )
+          .then(() => {
+            // Fetch all posts again to update UI after deleting the comment
+            dispatch(getAllPosts());
+
+            // Show success message
+            Swal.fire({
+              title: "Deleted!",
+              text: "The comment has been deleted.",
+              icon: "success",
+              confirmButtonColor: "#3085d6",
+            });
+          })
+          .catch((error) => {
+            console.error("Error deleting comment:", error);
+
+            // Show error message if deletion fails
+            Swal.fire({
+              title: "Error!",
+              text: "There was an error deleting the comment.",
+              icon: "error",
+              confirmButtonColor: "#3085d6",
+            });
+          });
+      }
+    });
   };
 
   return (
