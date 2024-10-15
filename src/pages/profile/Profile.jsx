@@ -9,11 +9,12 @@ import {
 } from "../../component";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signOutHandler } from "../../features/auth/authSlice";
 import { followUser, unFollowUser } from "../../features/user/helpers";
 import { getAllPosts } from "../../features/post/helpers";
 import { getUsers } from "../../features/user/helpers"; // Ensure this is imported
 import { FiLogOut } from "react-icons/fi";
+import { signOutHandler } from "../../features/auth/authSlice";
+
 import { AiOutlineArrowUp } from "react-icons/ai";
 import "react-responsive-modal/styles.css";
 import Loader from "react-spinner-loader";
@@ -67,11 +68,7 @@ export const Profile = () => {
 
   const sortedPosts = currentUserPosts.slice();
   sortedPosts.sort((a, b) => new Date(b?.updated_at) - new Date(a?.updated_at)); // Sort latest posts first
-  const handleSignOut = () => {
-    // Dispatch the signOut action to update the state and localStorage
-    dispatch(signOutHandler());
-    navigate("/", { replace: true });
-  };
+
   const handleFollow = () => {
     dispatch(
       followUser({
@@ -108,10 +105,6 @@ export const Profile = () => {
           <main className="md:mx-4     w-full sm:basis-2/3">
             <header className="hidden sm:flex m-4 w-full justify-between">
               <h1 className="text-xl">Profile</h1>
-              <FiLogOut
-                className="mr-2 w-5 h-5 text-blue-700 cursor-pointer"
-                onClick={() => dispatch(signOutHandler())}
-              />
             </header>
 
             <header className="text-xl font-bold flex py-4 text-blue-600 sm:hidden justify-between">
@@ -119,10 +112,6 @@ export const Profile = () => {
                 {" "}
                 Publishly{" "}
               </Link>
-              <FiLogOut
-                className="w-5 h-5 text-blue-700 cursor-pointer"
-                onClick={handleSignOut} // Correctly bound the event handler
-              />
             </header>
 
             {upLoadingPhoto ? (

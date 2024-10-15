@@ -6,13 +6,21 @@ import { BiEditAlt } from "react-icons/bi";
 import { AiOutlineHome, AiFillHome } from "react-icons/ai";
 import { MdOutlineExplore, MdExplore } from "react-icons/md";
 import { FaRegUser, FaUser } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+import { signOutHandler } from "../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export const AsideLeft = () => {
   const { userData } = useSelector((state) => state.auth);
   console.log("User Data", userData);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
-
+  const handleSignOut = () => {
+    // Dispatch the signOut action to update the state and localStorage
+    dispatch(signOutHandler());
+    navigate("/", { replace: true });
+  };
   return (
     <aside className="hidden sm:block basis-1/6 lg:basis-1/5">
       <header className="flex font-bold text-blue-600 mx-5 my-4 text-xl xl:text-2xl">
@@ -90,6 +98,14 @@ export const AsideLeft = () => {
               }
             </NavLink>
           </li>
+          <li className="my-2 mx-1 flex items-center">
+            <FiLogOut
+              className="w-5 ml-2 h-5 text-blue-700 cursor-pointer"
+              onClick={handleSignOut} // Correctly bound the event handler
+            />
+            <h2 className="text-xl ml-2 px-1 hidden xl:block">Logout</h2>
+          </li>
+
           <li className="my-2 mx-1">
             <button
               className="hidden xl:block my-8 mx-0 p-2 rounded-[10rem] w-full text-x cursor-pointer text-center 
