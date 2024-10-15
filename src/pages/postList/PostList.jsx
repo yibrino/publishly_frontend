@@ -1,14 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./postlist.css";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteOutline from "@mui/icons-material/DeleteOutline";
-
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getAllPosts } from "../../features/post/helpers";
-import { getUsers } from "../../features/user/helpers";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 
 export default function UserList() {
   const {
@@ -41,10 +36,9 @@ export default function UserList() {
     { field: "category", headerName: "Category", width: 150 },
     { field: "post_like_count", headerName: "Likes", width: 120 },
     {
-      field: "comments",
+      field: "comments_count", // Renamed the field to reflect it's a comment count
       headerName: "Comments",
       width: 150,
-      valueGetter: (params) => params.row.comments.length, // Show count of comments
     },
     {
       field: "action",
@@ -63,14 +57,14 @@ export default function UserList() {
     },
   ];
 
-  // Map user data to fit the DataGrid's expected `id` format
+  // Map post data to fit the DataGrid's expected `id` format and count comments
   const rows = posts.map((post) => ({
     id: post.post_id, // Use post_id for the DataGrid
     user: post.user, // Display user ID or username
     post_content: post.post_content, // Display post content
     category: post.category.category_name, // Display category name
     post_like_count: post.post_like_count, // Display like count
-    comments: post.comments, // Pass the comments array to count them later
+    comments_count: post.comments ? post.comments.length : 0, // Display the number of comments
   }));
 
   return (

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./userList.css";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteOutline from "@mui/icons-material/DeleteOutline";
-
 import { getUsers } from "../../features/user/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
@@ -70,13 +69,6 @@ export default function UserList() {
       field: "followers",
       headerName: "Followers",
       width: 150,
-      valueGetter: (params) => {
-        // Ensure params.row and followers exist, and count the number of followers
-        if (params.row && Array.isArray(params.row.followers)) {
-          return params.row.followers.length;
-        }
-        return 0; // Default to 0 if no followers
-      },
     },
     {
       field: "action",
@@ -105,7 +97,7 @@ export default function UserList() {
     user_email: user.user_email,
     user_firstname: user.user_firstname || "N/A",
     user_lastname: user.user_lastname || "N/A",
-    followers: user.followers.length || [], // Ensure followers is an array or default to an empty array
+    followers: user.followers ? user.followers.length : 0, // Ensure followers is always an array
   }));
 
   return (
