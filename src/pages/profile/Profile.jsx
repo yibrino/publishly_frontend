@@ -72,6 +72,30 @@ export const Profile = () => {
     dispatch(signOutHandler());
     navigate("/", { replace: true });
   };
+  const handleFollow = () => {
+    dispatch(
+      followUser({
+        user_id: currentUser.user_id, // The user being followed
+        follower_user_id: userData.id, // The logged-in user (follower)
+        token,
+      })
+    ).then(() => {
+      // Fetch updated user data after following is complete
+      dispatch(getUsers());
+    });
+  };
+  const handleUnfollow = () => {
+    dispatch(
+      unFollowUser({
+        user_id: currentUser.user_id, // The user being unfollowed
+        follower_user_id: userData.id, // The logged-in user (follower)
+        token,
+      })
+    ).then(() => {
+      // Fetch updated user data after following is complete
+      dispatch(getUsers());
+    });
+  };
 
   return (
     <div>
@@ -144,40 +168,25 @@ export const Profile = () => {
                       ))}
 
                     {/* Follow / Unfollow buttons */}
-                    {authUser?.following.find(
-                      (eachUser) =>
-                        eachUser?.user_username === currentUser?.user_username
-                    ) ? (
-                      <button
-                        className="mr-8 mt-4 px-3 w-18 h-8 bg-blue-600 hover:bg-blue-800 text-white rounded-xl shadow-md hover:shadow-lg transition duration-150 ease-in-out"
-                        onClick={() =>
-                          dispatch(
-                            unFollowUser({
-                              user_id: currentUser.user_id,
-                              follower_user_id: userData.id,
-                              token,
-                            })
-                          )
-                        }
-                      >
-                        Unfollow
-                      </button>
-                    ) : (
-                      <button
-                        className="mr-8 mt-4 px-3 w-18 h-8 bg-white hover:bg-blue-800 text-white rounded-xl shadow-md hover:shadow-lg transition duration-150 ease-in-out"
-                        onClick={() =>
-                          dispatch(
-                            followUser({
-                              user_id: currentUser.user_id,
-                              follower_user_id: userData.id,
-                              token,
-                            })
-                          )
-                        }
-                      >
-                        Follow
-                      </button>
-                    )}
+                    {authUser?.user_username !== currentUser?.user_username &&
+                      (authUser?.following.find(
+                        (eachUser) =>
+                          eachUser?.user_username === currentUser?.user_username
+                      ) ? (
+                        <button
+                          className="mr-8 mt-4 px-3 w-18 h-8 bg-blue-800  text-white rounded-xl shadow-md hover:shadow-lg transition duration-150 ease-in-out"
+                          onClick={handleUnfollow}
+                        >
+                          Unfollow
+                        </button>
+                      ) : (
+                        <button
+                          className="mr-8 mt-4 px-3 w-18 h-8 bg-white bg-blue-800  text-white rounded-xl shadow-md hover:shadow-lg transition duration-150 ease-in-out"
+                          onClick={handleFollow}
+                        >
+                          Follow
+                        </button>
+                      ))}
 
                     {/* Modal for Edit Profile */}
                     {authUser && (

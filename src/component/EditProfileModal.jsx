@@ -5,6 +5,7 @@ import { startUpLoading } from "../features/user/userSlice";
 import { updateUser, createProfile } from "../features/user/helpers"; // Import both actions
 import { useState, useEffect } from "react";
 import { getProfiles } from "../features/user/helpers";
+import { getUsers } from "../features/user/helpers";
 export const EditProfileModal = ({
   currentUser,
   showUpdateProfile,
@@ -109,7 +110,8 @@ export const EditProfileModal = ({
         ).then(() => {
           // After creating the profile, fetch the updated profiles
           dispatch(getProfiles());
-          console.log("Profile Updated successfully");
+          dispatch(getUsers());
+          console.log("Profile updated successfully");
         });
       } catch (error) {
         console.error("Error dispatching updateUser:", error);
@@ -119,12 +121,13 @@ export const EditProfileModal = ({
 
   return (
     <Modal
+      open={showUpdateProfile}
+      onClose={() => setShowUpdateProfile(false)} // This ensures modal closes when clicking outside
       styles={{
         modal: { width: "20rem", borderRadius: "1rem", height: "fit-content" },
       }}
-      open={showUpdateProfile}
-      onClose={() => setShowUpdateProfile(false)}
-      showCloseIcon={false}
+      showCloseIcon={false} // You can keep or remove this depending on if you want the close icon
+      center // Center the modal in the screen
     >
       <div className="flex flex-col">
         <div className="flex flex-col mx-auto">

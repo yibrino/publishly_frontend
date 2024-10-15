@@ -10,6 +10,7 @@ import {
 import { closePostModal, setEditPostObj } from "../features/post/postSlice";
 import { toast } from "react-toastify";
 import { getAllPosts } from "../features/post/helpers";
+import { getUsers } from "../features/user/helpers";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
@@ -115,13 +116,17 @@ export const CreatePostModal = () => {
                   user_id,
                   category_id: postData?.category_id, // Pass the selected category_id
                 })
-              );
-              dispatch(getAllPosts());
-              setIsFetching(false);
+              )
+                .then(() => {
+                  dispatch(getAllPosts());
+                  dispatch(getUsers()); // Dispatch getUsers after getAllPosts
+                  setIsFetching(false); // Set isFetching to false after everything is done
+                })
+                .catch((error) => {
+                  console.error("Error creating post:", error);
+                  setIsFetching(false); // Ensure isFetching is set to false even if there's an error
+                });
             }
-
-            dispatch(getAllPosts());
-            setIsFetching(false);
           } catch (err) {
             console.error("error occurred", err);
             setIsFetching(false);

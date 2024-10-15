@@ -37,21 +37,34 @@ export const Post = ({ post }) => {
   const userProfile = profiles.find(
     (profile) => profile.user === currentUser?.user_id
   );
-
   // Edit Post Handler
-  const editHandler = (e) => {
+  const editHandler = async (e) => {
     e.stopPropagation();
-    dispatch(openPostModal());
-    dispatch(setEditPostObj(post));
-    setPostOptions(false);
+
+    try {
+      // Dispatch openPostModal (synchronous action)
+      dispatch(openPostModal());
+
+      // Set the post object to edit (synchronous action)
+      dispatch(setEditPostObj(post));
+
+      // Immediately fetch all posts after setting the post object to edit
+      await dispatch(getAllPosts());
+
+      // Optionally, close the post options UI
+      setPostOptions(false);
+    } catch (error) {
+      console.error("Error fetching posts after editing:", error);
+    }
   };
 
   // Delete Post Handler
   const deletePostHandler = (e) => {
     e.stopPropagation();
-    dispatch(deletePost({ postId: post?.post_id, token }));
-    dispatch(getAllPosts());
-    setPostOptions(false);
+    dispatch(deletePost({ postId: post?.post_id, token })).then(() => {
+      dispatch(getAllPosts());
+      setPostOptions(false);
+    });
   };
 
   // Follow/Unfollow Handlers

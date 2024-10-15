@@ -42,7 +42,7 @@ export const Home = () => {
     dispatch(getUsers());
     dispatch(getAllPosts());
     dispatch(getAllCategories()); // Fetch categories
-  }, [dispatch]);
+  }, []);
 
   const currentUser = users.find((user) => user.user_id === userData.id);
   const user_id = userData.id;
@@ -136,15 +136,19 @@ export const Home = () => {
             user_id,
             category_id: selectedCategory,
           })
-        );
+        )
+          .then(() => {
+            dispatch(getAllPosts());
+            dispatch(getUsers()); // Dispatch getUsers after getAllPosts
+            setIsFetching(false); // Set isFetching to false after everything is done
+          })
+          .catch((error) => {
+            console.error("Error creating post:", error);
+            setIsFetching(false); // Ensure isFetching is set to false even if there's an error
+          });
         setContent("");
         setPostImageUrl("");
         setSelectedCategory(""); // Reset category selection
-
-        // Refetch posts from the server to ensure it's updated
-        dispatch(getAllPosts());
-
-        setIsFetching(false);
       } catch (err) {
         console.error("error occurred", err);
         setIsFetching(false);
@@ -153,14 +157,19 @@ export const Home = () => {
       // Optimistically update the UI
       dispatch(
         createPost({ content, token, user_id, category_id: selectedCategory })
-      );
-
+      )
+        .then(() => {
+          dispatch(getAllPosts());
+          dispatch(getUsers()); // Dispatch getUsers after getAllPosts
+          setIsFetching(false); // Set isFetching to false after everything is done
+        })
+        .catch((error) => {
+          console.error("Error creating post:", error);
+          setIsFetching(false); // Ensure isFetching is set to false even if there's an error
+        });
       setContent("");
       setPostImageUrl("");
       setSelectedCategory(""); // Reset category selection
-
-      // Refetch posts from the server to ensure it's updated
-      dispatch(getAllPosts());
     }
   };
 
