@@ -1,0 +1,87 @@
+.newUser {
+  flex: 4;
+  padding: 20px;
+}
+
+.newUserTitle {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.newUserForm {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.newUserItem {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.newUserItem label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.newUserItem input,
+.newUserSelect {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.newUserItem input:focus,
+.newUserSelect:focus {
+  border-color: #3f51b5;
+  outline: none;
+  box-shadow: 0 0 5px rgba(63, 81, 181, 0.5);
+}
+
+.newUserGender {
+  display: flex;
+  gap: 20px;
+}
+
+.newUserGender label {
+  font-size: 14px;
+  color: #555;
+}
+
+.newUserGender input {
+  margin-right: 10px;
+}
+
+.newUserButton {
+  width: 100%;
+  padding: 14px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.newUserButton:hover {
+  background-color: #303f9f;
+}
+
+@media (min-width: 768px) {
+  .newUserItem {
+    width: 48%; /* Display items side by side on larger screens */
+  }
+
+  .newUserButton {
+    width: auto;
+    max-width: 200px;
+  }
+}
