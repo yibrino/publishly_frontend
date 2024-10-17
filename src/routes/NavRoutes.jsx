@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Home, Signup, Signin, Explore, Profile, SinglePost } from "../pages";
 import { CategoryPage } from "../pages/categoryPage/CategoryPage";
-
+import NotFound from "../pages/notfound/Notfound";
 import HomePage from "../pages/home";
 import AdminHome from "../pages/admin/Home";
 
@@ -72,7 +72,7 @@ export const NavRoutes = () => {
       )}
 
       {/* Handle unknown routes */}
-      <Route path="*" element={<h2> OOPS! Page Not Found</h2>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

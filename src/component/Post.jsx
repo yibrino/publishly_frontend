@@ -6,7 +6,7 @@ import { MdOutlineBookmarkBorder, MdOutlineBookmark } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { getFormattedDate } from "../utilities/getFormattedDate";
 import { openPostModal, setEditPostObj } from "../features/post/postSlice";
-import { followUser, unFollowUser } from "../features/user/helpers";
+import { followUser, getUsers, unFollowUser } from "../features/user/helpers";
 import {
   likePost,
   dislikePost,
@@ -38,6 +38,8 @@ export const Post = ({ post }) => {
   const userProfile = profiles.find(
     (profile) => profile.user === currentUser?.user_id
   );
+  console.log("User Id", userData);
+  console.log("Current User", currentUser);
   // Edit Post Handler
   const editHandler = async (e) => {
     e.stopPropagation();
@@ -109,17 +111,23 @@ export const Post = ({ post }) => {
   // Follow/Unfollow Handlers
   const toggleFollow = (e) => {
     e.stopPropagation();
-    const action = currentUser?.user_following?.includes(userData.id)
+
+    const action = currentUser.followers.some(
+      (followedUser) => followedUser.user_id === userData.id
+    )
       ? unFollowUser
       : followUser;
+
     dispatch(
       action({
-        user_id: currentUser?.user_id,
-        follower_user_id: userData.id,
+        user_id: currentUser.user_id, // The user being followed
+        follower_user_id: userData.id, // The logged-in user (follower)
         token,
       })
-    );
-    setPostOptions(false);
+    ).then(() => {
+      // Fetch updated user data after following is complete
+      dispatch(getUsers());
+    });
   };
 
   // Like Post Handler
@@ -215,7 +223,9 @@ export const Post = ({ post }) => {
                     className="my-1 p-1 hover:bg-slate-200 rounded"
                     onClick={toggleFollow}
                   >
-                    {currentUser?.user_following?.includes(userData.id)
+                    {currentUser.followers.some(
+                      (followedUser) => followedUser.user_id === userData.id
+                    )
                       ? "Unfollow"
                       : "Follow"}
                   </li>

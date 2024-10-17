@@ -170,7 +170,7 @@ export const Profile = () => {
                         </button>
                       ) : (
                         <button
-                          className="mr-8 mt-4 px-3 w-18 h-8 bg-white bg-blue-800  text-white rounded-xl shadow-md hover:shadow-lg transition duration-150 ease-in-out"
+                          className="mr-8 mt-4 px-3 w-18 h-8  bg-blue-800  text-white rounded-xl shadow-md hover:shadow-lg transition duration-150 ease-in-out"
                           onClick={handleFollow}
                         >
                           Follow
