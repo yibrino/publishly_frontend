@@ -101,9 +101,14 @@ export const AsideLeft = () => {
           <li className="my-2 mx-1 flex items-center">
             <FiLogOut
               className="w-5 ml-2 h-5 text-blue-700 cursor-pointer"
-              onClick={handleSignOut} // Correctly bound the event handler
+              onClick={handleSignOut} // Correctly bound the event handler to the icon
             />
-            <h2 className="text-xl ml-2 px-1 hidden xl:block">Logout</h2>
+            <h2
+              onClick={handleSignOut} // Bound the event handler to the h2 as well
+              className="text-xl ml-2 px-1 hidden xl:block cursor-pointer"
+            >
+              Logout
+            </h2>
           </li>
 
           <li className="my-2 mx-1">
